@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Sauti: Voice-First Offline CS Tutor</title>
+<link rel="stylesheet" href="panel.css">
+</head>
+<body>
+  <div id="zv-app">
+    <header class="zv-header">
+      <div class="zv-header-title">
+        <img src="icons/icon-48.png" alt="" class="zv-logo">
+        <div>
+          <div class="zv-title-text">Sauti</div>
+          <div class="zv-badge"><span class="zv-dot"></span>100% Offline · Voice-First CS Tutor</div>
+        </div>
+      </div>
+      <div class="zv-header-actions">
+        <button type="button" id="zv-voice-toggle" aria-label="Turn on Read Aloud" aria-pressed="false">🔊</button>
+        <button type="button" id="zv-theme-toggle" aria-label="Toggle dark mode">🌙</button>
+      </div>
+    </header>
+
+    <div class="zv-controls">
+      <div class="zv-row">
+        <label class="zv-label" for="zv-level">Pick your level</label>
+        <select id="zv-level" aria-label="Pick your level">
+          <option value="f3">🌱 Just Starting Out</option>
+          <option value="f4">🧩 Building Algorithms</option>
+          <option value="f5">📊 Standard Algorithms</option>
+          <option value="f6">🚀 Advanced Topics</option>
+        </select>
+      </div>
+      <div id="zv-topics" class="zv-topics" role="tablist" aria-label="Topics"></div>
+    </div>
+
+    <section class="zv-ask">
+      <div class="zv-ask-heading">
+        <span class="zv-ask-icon">🤖</span>
+        <div>
+          <div class="zv-ask-title">Ask Sauti</div>
+          <div class="zv-hint" id="zv-ask-status" aria-live="polite">Loading the on-device model…</div>
+        </div>
+      </div>
+      <div class="zv-ask-row">
+        <input type="text" id="zv-ask-input" aria-label="Type a question" placeholder="Type a question in your own words…">
+        <button type="button" id="zv-mic-btn" aria-label="Ask by voice, offline" aria-pressed="false">🎤</button>
+        <button type="button" id="zv-ask-btn" class="zv-btn zv-btn-primary">Ask</button>
+      </div>
+      <div id="zv-ask-result" aria-live="polite" aria-atomic="false"></div>
+    </section>
+
+    <section class="zv-ask">
+      <div class="zv-ask-heading">
+        <span class="zv-ask-icon">📷</span>
+        <div>
+          <div class="zv-ask-title">Scan a Question Paper</div>
+          <div class="zv-hint" id="zv-ocr-status" aria-live="polite">Take or upload a photo, or upload a PDF, of a question paper. Read offline, on-device.</div>
+        </div>
+      </div>
+      <div class="zv-ask-row">
+        <input type="file" id="zv-ocr-input" accept="image/*,application/pdf" capture="environment" aria-label="Photo or PDF of a question paper">
+      </div>
+      <div id="zv-ocr-result" aria-live="polite" aria-atomic="false"></div>
+    </section>
+
+    <main id="zv-body" aria-live="polite" aria-atomic="false"></main>
+  </div>
+  <script src="panel.js"></script>
+  <script src="lib/tf-core.min.js"></script>
+  <script src="lib/tf-backend-cpu.min.js"></script>
+  <script src="lib/tf-converter.min.js"></script>
+  <script src="mark.js"></script>
+  <script src="ask.js"></script>
+  <script src="voice.js"></script>
+  <script src="lib/vosk/vosk.js"></script>
+  <script src="voice-input.js"></script>
+  <script src="lib/tesseract/tesseract.min.js"></script>
+  <script src="ocr.js"></script>
+  <script type="module" src="pdf-support.mjs"></script>
+</body>
+</html>

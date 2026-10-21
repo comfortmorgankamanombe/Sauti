@@ -1,0 +1,23 @@
+{
+  "manifest_version": 3,
+  "name": "Sauti - Voice-First Offline CS Tutor",
+  "version": "2.0",
+  "description": "Offline-first, voice-first Computer Science learning engine, built accessible for blind and low-vision students from the start. Grounded in real, verified syllabus content. No internet or API calls required.",
+  "icons": {
+    "16": "icons/icon-16.png",
+    "48": "icons/icon-48.png",
+    "128": "icons/icon-128.png"
+  },
+  "action": {
+    "default_icon": {
+      "16": "icons/icon-16.png",
+      "48": "icons/icon-48.png",
+      "128": "icons/icon-128.png"
+    },
+    "default_title": "Open Sauti"
+  },
+  "background": {
+    "service_worker": "background.js"
+  },
+  "permissions": ["tabs"]
+}
