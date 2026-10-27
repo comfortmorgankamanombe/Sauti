@@ -250,7 +250,7 @@
     },
     {
       q: "Who made this?",
-      a: "Sauti was built by Comfort Kamanombe, a software engineering student at Bindura University of Science and Technology, Zimbabwe. It is voice-first so blind and low-vision students can use it too.",
+      a: "Sauti was built by Comfort Kamanombe, a software engineering student at Bindura University of Science Education, Zimbabwe. It is voice-first so blind and low-vision students can use it too.",
       level: "About Sauti",
       topic: "What This Tool Is",
       topicRef: "About",
@@ -328,7 +328,7 @@
     },
     {
       q: "Using the rule abc = a cubed + b cubed + c cubed, produce a program code to find all Armstrong numbers in the range 0 to 600.",
-      a: "VB.NET: Dim a, b, c As Integer. For num = 0 To 600. a = num \\ 100. b = (num \\ 100) Mod 10. c = num Mod 10. If (a*a*a + b*b*b + c*c*c) = num Then Console.WriteLine(num & \" is Armstrong\") End If. Next. (Worth double-checking the exact digit-splitting logic against the marking scheme, since a 3-digit Armstrong check needs hundreds/tens/units split correctly.)",
+      a: "VB.NET: Dim a, b, c As Integer. For num = 0 To 600. a = num \\ 100. b = (num \\ 10) Mod 10. c = num Mod 10. If (a*a*a + b*b*b + c*c*c) = num Then Console.WriteLine(num & \" is Armstrong\") End If. Next. Here a is the hundreds digit, b the tens digit and c the units digit; from 0 to 600 this prints 0, 1, 153, 370 and 371.",
       level: "🚀 Advanced Topics",
       topic: "Standard Algorithms",
       topicRef: "6023/2 Section B",
@@ -362,6 +362,53 @@
       topicRef: "6023/2 Section C",
     }
   );
+
+  // Short definitions of the core terms in each topic, so the plain
+  // "what is X?" questions students ask most often get a direct answer.
+  // Written to agree with the topic explanations above.
+  const DEFINITIONS = [
+    ["🌱 Just Starting Out", "Algorithm Tools: Flowcharts and Pseudocode", [
+      ["What is an algorithm?", "An algorithm is a finite set of clear, step-by-step instructions for solving a problem or completing a task."],
+      ["What is a flowchart?", "A flowchart is a diagram that shows the steps of an algorithm using standard symbols joined by arrows: an oval for start and end, a rectangle for a process, a diamond for a decision, and a parallelogram for input and output."],
+      ["What does a diamond shape mean in a flowchart?", "A diamond is the decision symbol. It holds a yes/no question, and the flow follows a different arrow depending on the answer."],
+      ["What is pseudocode?", "Pseudocode is a way of writing an algorithm in structured, English-like statements such as INPUT, IF ... THEN, WHILE and OUTPUT, without following the exact rules of any one programming language."],
+    ]],
+    ["🌱 Just Starting Out", "Interpreting and Testing Algorithms", [
+      ["What is a trace table?", "A trace table records the value of each variable, step by step, as an algorithm runs, so you can follow what it does and check that it is correct."],
+      ["What are normal, boundary and invalid test data?", "Normal data is typical valid input the algorithm should accept. Boundary (extreme) data sits at the very edges of the valid range. Invalid (abnormal) data is outside the range or the wrong type and should be rejected."],
+    ]],
+    ["🧩 Building Algorithms", "Algorithm Design", [
+      ["What are sequence, selection and iteration?", "They are the three basic control structures. Sequence runs steps one after another. Selection chooses between paths using a condition, such as IF ... THEN ... ELSE. Iteration repeats steps using a loop, such as FOR, WHILE or REPEAT ... UNTIL."],
+      ["What is iteration or a loop?", "Iteration means repeating a set of steps. A count-controlled loop (FOR) repeats a fixed number of times; a condition-controlled loop (WHILE or REPEAT ... UNTIL) repeats until a condition changes."],
+      ["What is selection in an algorithm?", "Selection is when an algorithm chooses which steps to run based on a condition, using IF ... THEN ... ELSE or CASE statements."],
+      ["What is a variable?", "A variable is a named storage location in memory whose value can change while the program runs."],
+    ]],
+    ["📊 Standard Algorithms", "Pseudocode Structures, Standard Algorithms, Data Structures", [
+      ["How does linear search work?", "Linear search checks each item in a list one at a time, from the start, until it finds the target or reaches the end. It works on unsorted lists but is slow on large ones."],
+      ["How does binary search work?", "Binary search works on a sorted list. It checks the middle item: if that is the target it stops, otherwise it discards the half that cannot contain the target and repeats on the other half, so the search range halves at every step."],
+      ["How does bubble sort work?", "Bubble sort goes through the list comparing each pair of neighbouring items and swaps them if they are in the wrong order. It repeats these passes until a full pass makes no swaps, which means the list is sorted."],
+      ["How does quick sort work?", "Quick sort picks a pivot item, splits the list into items smaller than the pivot and items larger than it, then sorts each part the same way until every part is sorted."],
+      ["What is a data structure?", "A data structure is a way of organising and storing data so it can be used efficiently. Static structures such as arrays have a fixed size; dynamic structures such as linked lists and binary trees can grow and shrink while the program runs."],
+    ]],
+    ["🚀 Advanced Topics", "Binary Trees and Array Operations", [
+      ["What is an array?", "An array is a static data structure that stores a fixed number of items of the same data type under one name, in consecutive positions reached by an index."],
+      ["What is a binary tree?", "A binary tree is a dynamic data structure made of nodes, where each node holds a value and has at most two children, a left child and a right child. The top node is called the root."],
+      ["What is a stack?", "A stack is a last in, first out (LIFO) data structure: items are added (pushed) and removed (popped) only at the top."],
+      ["What is a queue?", "A queue is a first in, first out (FIFO) data structure: items join at the rear and leave from the front."],
+      ["What is a linked list?", "A linked list is a dynamic data structure in which each node stores a value and a pointer to the next node, so the items do not need to sit next to each other in memory."],
+    ]],
+    ["🚀 Advanced Topics", "Primitive Data Types", [
+      ["What is a data type?", "A data type tells the computer what kind of value a variable holds and what can be done with it. The primitive types are integer, floating point (real), character and Boolean."],
+      ["What is a Boolean?", "A Boolean is a data type with only two possible values, TRUE or FALSE, used for conditions and flags."],
+    ]],
+    ["🚀 Advanced Topics", "Recursion", [
+      ["What is recursion?", "Recursion is when a function calls itself to solve a problem by breaking it into smaller versions of the same problem, until it reaches a base case it can answer directly."],
+      ["What is a base case?", "The base case is the condition in a recursive function that stops the recursion and returns an answer directly, without calling the function again."],
+    ]],
+  ];
+  DEFINITIONS.forEach(([level, topic, items]) => {
+    items.forEach(([q, a]) => corpus.push({ q, a, level, topic, topicRef: "Key definitions" }));
+  });
 
   window.__zvCorpus = corpus;
 

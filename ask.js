@@ -31,18 +31,16 @@
   const RESPONSE_CONTEXT_NODE = "input_res_context";
   const QUERY_RESULT_NODE = "Final/EncodeQuery/mul";
   const RESPONSE_RESULT_NODE = "Final/EncodeResult/mul";
-  // Recalibrated against a real ZIMSEC 6023/2 (Nov 2024) past paper, run
-  // through this exact model/tokenizer in a Node harness: 0.115 was too
-  // permissive once tested against genuinely out-of-thread questions
-  // (logic circuits, architecture, OOP, databases), several of which
-  // scored as high as 0.158 against totally unrelated corpus topics (e.g.
-  // an SQL question "matching" Binary Trees). The one clean, correct,
-  // unambiguous match in that same real-paper test scored 0.167. 0.16
-  // sits in the gap: it costs one true positive that scored 0.127 (a
-  // trace-table question), but a confident wrong-topic answer is worse
-  // than an honest "please rephrase" here. Re-run this calibration if the
-  // corpus grows past its current single syllabus thread.
-  const MATCH_THRESHOLD = 0.16;
+  // Matching combines two signals, because neither is reliable alone:
+  //  - the model's query embeddings, compared question to question after
+  //    subtracting the corpus mean (this model's raw query vectors share a
+  //    large common component, so raw cosine is ~0.95 for any two questions);
+  //  - IDF-weighted overlap of syllabus words, so an off-topic question that
+  //    shares no syllabus term cannot match on sentence shape alone.
+  // Calibrated on the in-syllabus and off-topic question sets in
+  // test/match-test.js; re-run it when the corpus changes.
+  const KEYWORD_WEIGHT = 0.6;
+  const MATCH_THRESHOLD = 0.56;
 
   // ---------- Tokenizer (wordpiece-style, longest-match trie) ----------
   const SEPARATOR = "▁";
@@ -273,6 +271,30 @@
     return null;
   }
 
+  async function embedQueries(state, texts) {
+    const { queryEmbedding } = embed(state, texts, texts, texts.map(() => ""));
+    const out = await queryEmbedding.array();
+    queryEmbedding.dispose();
+    return out;
+  }
+
+  // ---------- Keyword index ----------
+  const STOPWORDS = new Set(("a an the is are was were be been of to in on at for and or but if then so " +
+    "what which who whom whose why how when where does do did can could should would will shall may might " +
+    "must this that these those it its it's you your i me my we our they their them he she his her " +
+    "with without from by about into as than there here please tell explain describe define state give " +
+    "name list use used using mean means meaning work works working happen happens make made").split(" "));
+
+  function stem(word) {
+    let w = word.replace(/(ing|ed|es|s)$/, "");
+    if (w.length < 3) w = word;
+    return w.slice(0, 6);
+  }
+
+  function keywords(text) {
+    return [...new Set(text.toLowerCase().split(/[^a-z0-9]+/).filter((w) => w.length > 1 && !STOPWORDS.has(w)).map(stem))];
+  }
+
   // ---------- Corpus embedding cache ----------
   let corpusCache = null;
 
@@ -280,39 +302,58 @@
     if (corpusCache) return corpusCache;
     const corpus = window.__zvCorpus || [];
     const questions = corpus.map((item) => item.q);
-    const { responseEmbedding } = embed(state, [questions[0] || ""], questions, questions.map(() => ""));
-    const data = await responseEmbedding.array();
-    responseEmbedding.dispose();
-    corpusCache = { corpus, vectors: data };
+    // Embedding every stored question takes over a minute on the CPU
+    // backend, so they are precomputed by test/build-embeddings.js and
+    // shipped in models/corpus-embeddings.json. Only questions added since
+    // the last build are embedded here.
+    let stored = {};
+    try {
+      stored = await (await fetch(chrome.runtime.getURL("models/corpus-embeddings.json"))).json();
+    } catch (e) {}
+    const missing = questions.filter((q) => !stored[q]);
+    if (missing.length) {
+      const fresh = await embedQueries(state, missing);
+      missing.forEach((q, i) => { stored[q] = fresh[i]; });
+    }
+    const raw = questions.map((q) => stored[q]);
+    const mean = raw[0].map((_, i) => raw.reduce((s, v) => s + v[i], 0) / raw.length);
+    const vectors = raw.map((v) => v.map((x, i) => x - mean[i]));
+
+    const docs = corpus.map((item) => new Set(keywords(item.q + " " + item.topic)));
+    const df = {};
+    docs.forEach((d) => d.forEach((k) => { df[k] = (df[k] || 0) + 1; }));
+    const idf = (k) => Math.log(1 + corpus.length / (df[k] || 0.5));
+    corpusCache = { corpus, vectors, mean, docs, idf };
     return corpusCache;
   }
 
   // ---------- Public: answer a typed question ----------
   async function answerQuestion(text) {
     const state = await loadState();
-    const { corpus, vectors } = await getCorpusEmbeddings(state);
+    const { corpus, vectors, mean, docs, idf } = await getCorpusEmbeddings(state);
     const { queryEmbedding } = embed(state, [text], [text], [""]);
-    const queryVec = (await queryEmbedding.array())[0];
+    const queryVec = (await queryEmbedding.array())[0].map((x, i) => x - mean[i]);
     queryEmbedding.dispose();
 
-    let bestIndex = -1;
-    let bestScore = -Infinity;
+    const words = keywords(text);
+    const total = words.reduce((s, k) => s + idf(k), 0) || 1;
+
+    let best = { index: -1, score: -Infinity, semantic: 0, keyword: 0 };
     vectors.forEach((vec, i) => {
-      const score = cosineSim(queryVec, vec);
-      if (score > bestScore) {
-        bestScore = score;
-        bestIndex = i;
-      }
+      const semantic = cosineSim(queryVec, vec);
+      const keyword = words.filter((k) => docs[i].has(k)).reduce((s, k) => s + idf(k), 0) / total;
+      const score = KEYWORD_WEIGHT * keyword + (1 - KEYWORD_WEIGHT) * semantic;
+      if (score > best.score) best = { index: i, score, semantic, keyword };
     });
 
-    if (bestIndex === -1 || bestScore < MATCH_THRESHOLD) {
+    if (best.index === -1 || best.keyword === 0 || best.score < MATCH_THRESHOLD) {
       const fuzzy = fuzzyFallback(text, corpus);
       if (fuzzy) {
-        return { matched: true, score: bestScore, item: fuzzy.item, viaFuzzy: true };
+        return { matched: true, score: best.score, item: fuzzy.item, viaFuzzy: true };
       }
-      return { matched: false, score: bestScore };
+      return { matched: false, score: best.score, best: corpus[best.index], semantic: best.semantic, keyword: best.keyword };
     }
-    return { matched: true, score: bestScore, item: corpus[bestIndex] };
+    return { matched: true, score: best.score, item: corpus[best.index], semantic: best.semantic, keyword: best.keyword };
   }
 
   // ---------- UI wiring ----------
@@ -384,4 +425,6 @@
   // Exposed so ocr.js can run the same on-device matching against text it
   // pulls off a scanned question paper, without duplicating this logic.
   window.__sautiAnswerQuestion = answerQuestion;
+  // Used by test/build-embeddings.js to precompute the corpus vectors.
+  window.__sautiEmbedQueries = async (texts) => embedQueries(await loadState(), texts);
 })();

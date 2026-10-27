@@ -1,0 +1,18 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Sauti speech engine</title>
+</head>
+<body>
+<!--
+  Runs the Vosk speech recogniser. Vosk's WebAssembly build uses
+  new Function(), which Chrome blocks on normal extension pages, so it runs
+  here, in a sandboxed extension page (see "sandbox" in manifest.json).
+  voice-input.js sends the model and the microphone audio in with
+  postMessage and gets the text back. Nothing leaves the device.
+-->
+<script src="lib/vosk/vosk.js"></script>
+<script src="vosk-sandbox.js"></script>
+</body>
+</html>

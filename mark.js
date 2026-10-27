@@ -18,21 +18,39 @@
     "draw","write","give","state","using","showing","shown","below","above","was",
     "were","has","have","had","not","but","so","if","then","else","will","would",
     "can","could","into","your","you","their","there","which","who","when","where",
+    // filler that says nothing about the concept
+    "does","did","actually","out","work","works","also","just","only","very","such",
+    "than","them","they","about","all","any","some","more","less","same","other",
+    "way","make","makes","made","use","used","uses","need","needs","must","should",
+    "may","might","keep","keeps","help","helps","find","know","like","one","two",
+    "etc","because","since","until","again","every","something","thing","things",
   ]);
+
+  // Light stemming so "variables" matches "variable" and "runs" matches "run".
+  function stem(w) {
+    const s = w.replace(/(ing|ed|s)$/, "").replace(/e$/, "");
+    return s.length >= 3 ? s : w;
+  }
 
   function significantWords(text) {
     return text
       .toLowerCase()
       .replace(/[^a-z0-9\s]/g, " ")
       .split(/\s+/)
-      .filter((w) => w.length > 2 && !STOP.has(w));
+      .filter((w) => w.length > 2 && !STOP.has(w))
+      .map(stem);
   }
 
   function mark(studentAnswer, correctAnswer) {
+    // Keep each key term's original spelling for the "you're missing" list.
+    const original = {};
+    correctAnswer.toLowerCase().replace(/[^a-z0-9\s]/g, " ").split(/\s+/).forEach((w) => {
+      if (w.length > 2 && !STOP.has(w) && !original[stem(w)]) original[stem(w)] = w;
+    });
     const need = Array.from(new Set(significantWords(correctAnswer)));
     const got = new Set(significantWords(studentAnswer));
     const present = need.filter((w) => got.has(w));
-    const missing = need.filter((w) => !got.has(w));
+    const missing = need.filter((w) => !got.has(w)).map((w) => original[w] || w);
     const ratio = need.length ? present.length / need.length : 0;
     // Thresholds checked against real cases, not guessed: a short correct
     // answer (as few as 3 key terms) can lose a whole concept and still

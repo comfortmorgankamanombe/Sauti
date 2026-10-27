@@ -20,7 +20,7 @@
 const http = require("http");
 const os = require("os");
 
-const PORT = 3000;
+const PORT = Number(process.env.PORT) || 3000;
 
 // A small demo set, lifted straight from the real Form 3 syllabus content
 // already in panel.js, so the classroom demo and the solo tutor never

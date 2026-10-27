@@ -22,7 +22,17 @@ async function extractPdfText(file, onProgress) {
     if (onProgress) onProgress(`Reading page ${i} of ${pdf.numPages}…`);
     const page = await pdf.getPage(i);
     const textContent = await page.getTextContent();
-    const pageText = textContent.items.map((item) => item.str).join(" ").trim();
+    // Rebuild line breaks from each text item's vertical position, so the
+    // questions stay on separate lines for splitIntoQuestions() in ocr.js.
+    let pageText = "";
+    let lastY = null;
+    for (const item of textContent.items) {
+      const y = item.transform[5];
+      if (lastY !== null) pageText += Math.abs(y - lastY) > 2 ? "\n" : " ";
+      pageText += item.str;
+      lastY = y;
+    }
+    pageText = pageText.replace(/ +/g, " ").trim();
 
     if (pageText.length >= 20) {
       fullText += "\n" + pageText;

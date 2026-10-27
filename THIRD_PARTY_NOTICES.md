@@ -10,5 +10,5 @@ Sauti bundles the following open-source components, unmodified unless noted. Eac
 | Tesseract.js and tesseract.js-core | `lib/tesseract/` | Apache-2.0 |
 | Tesseract English trained data | `models/tesseract-eng/` | Apache-2.0 |
 | PDF.js (Mozilla) | `lib/pdfjs/` | Apache-2.0 |
-| Vosk browser runtime | `lib/vosk/` | Apache-2.0 |
+| Vosk browser runtime (modified: the worker keeps the model in memory (MEMFS) instead of IndexedDB, and accepts an absolute blob: model URL, so it can run in a sandboxed page) | `lib/vosk/` | Apache-2.0 |
 | Vosk small English model | `models/vosk-small-en/` | Apache-2.0 |

@@ -30,6 +30,9 @@
       corePath: chrome.runtime.getURL("lib/tesseract/tesseract-core-simd-lstm.wasm.js"),
       langPath: chrome.runtime.getURL("models/tesseract-eng"),
       gzip: true,
+      // Load the worker file directly: a blob worker (the default) cannot
+      // importScripts() a chrome-extension:// URL.
+      workerBlobURL: false,
     });
     return workerPromise;
   }
