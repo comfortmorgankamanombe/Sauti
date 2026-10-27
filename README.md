@@ -46,4 +46,4 @@ See [THIRD_PARTY_NOTICES.md](THIRD_PARTY_NOTICES.md).
 
 ## Author
 
-Built by Comfort Kamanombe, Software Engineering, Bindura University of Science and Technology, Zimbabwe.
+Built by Comfort Kamanombe, Software Engineering, Bindura University of Science Education, Zimbabwe.
