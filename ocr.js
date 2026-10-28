@@ -72,8 +72,12 @@
     }
     status.textContent = `Found ${questions.length} question${questions.length === 1 ? "" : "s"}. Checking each against what Sauti knows…`;
 
+    // Headings and instructions ("Answer ALL questions") are not questions:
+    // skip them when they don't match, instead of listing them as unanswered.
+    const looksLikeQuestion = (t) => /^(\(?\d{1,2}\)?[.)]|\(?[a-z]\)|Q\d)/i.test(t) || t.includes("?");
     for (const q of questions) {
       const outcome = await window.__sautiAnswerQuestion(q);
+      if (!outcome.matched && !looksLikeQuestion(q)) continue;
       const box = document.createElement("div");
       box.className = "zv-qa";
       const qEl = document.createElement("div");

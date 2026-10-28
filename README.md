@@ -8,7 +8,7 @@ All of it runs on the student's own device. It makes no network calls and needs 
 
 | Feature | How it works |
 |---|---|
-| **Ask a question** (typed or spoken) | Google's Universal Sentence Encoder QnA model runs in the browser through TensorFlow.js. Sauti compares the student's question with verified syllabus questions using two signals: the model's meaning vectors (after removing the component every question shares) and IDF-weighted overlap of syllabus terms. If no match is confident enough, Sauti asks the student to rephrase rather than guessing. |
+| **Ask a question** (typed or spoken) | Google's Universal Sentence Encoder QnA model runs in the browser through TensorFlow.js. Sauti compares the student's question with verified questions using two signals: the model's meaning vectors (after removing the component every question shares) and IDF-weighted overlap of syllabus terms. If no match is confident enough, Sauti asks the student to rephrase rather than guessing. |
 | **Calibrated matching** | `test/match-test.js` runs 40 real student-style questions and 20 off-topic ones through the extension. Current result: 38/40 answered correctly, 1 asked to rephrase, 1 close answer, and 20/20 off-topic questions rejected. The stored questions' vectors are precomputed (`test/build-embeddings.js`), so Sauti is ready in under a second. |
 | **Scan a question paper** | Tesseract (WebAssembly, language data bundled) reads photos. PDFs use pdf.js to pull the embedded text first and fall back to OCR only for scanned pages. Every recognised question goes through the same matcher. |
 | **Offline speech input** | Vosk speech-to-text runs as WebAssembly in a sandboxed extension page (`vosk-sandbox.html`), because its build needs `new Function`, which normal extension pages block. Chrome's built-in speech recognition was rejected because it sends audio to the cloud. Microphone audio never leaves the device. |
@@ -16,7 +16,7 @@ All of it runs on the student's own device. It makes no network calls and needs 
 | **Check my answer** | Shows the student which key terms from the correct answer are missing from theirs, so the feedback is transparent. |
 | **Classroom mode** | `classroom/server.js` is a Node.js server with no dependencies. It runs on a teacher's laptop and serves a whole class over a local hotspot, with no internet uplink. |
 
-**Content:** the Algorithm Design and Data Structures thread of Zimbabwe's national Computer Science syllabus, Forms 3 to 6. Each topic has an explanation, a hands-on practical activity and practice questions.
+**Content:** algorithm design, programming fundamentals and data structures, from first concepts to advanced topics. Each topic has an explanation, a hands-on practical activity and practice questions.
 
 ## Current limitations
 

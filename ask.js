@@ -368,7 +368,7 @@
     status.textContent = "Loading the on-device model…";
     loadState()
       .then((state) => getCorpusEmbeddings(state))
-      .then(() => { status.textContent = "Ready. Ask anything from Form 3 to Form 6."; })
+      .then(() => { status.textContent = "Ready. Ask about algorithms, programming and data structures."; })
       .catch((err) => {
         console.error(err);
         status.textContent = "Could not load the on-device model.";
@@ -387,7 +387,7 @@
           result.innerHTML = "";
           const msg = document.createElement("div");
           msg.className = "zv-hint";
-          msg.textContent = "Please rephrase your question, that doesn't closely match anything in the syllabus content yet.";
+          msg.textContent = "Please rephrase your question, that doesn't closely match anything Sauti covers yet.";
           result.appendChild(msg);
         } else {
           status.textContent = "";

@@ -22,11 +22,11 @@
       topics: [
         {
           key: "tools",
-          topicRef: "6.7 Algorithm Design and Problem Solving (Form 3): Algorithm Tools",
+          topicRef: "Algorithm Design and Problem Solving: Algorithm Tools",
           title: "Algorithm Tools: Flowcharts and Pseudocode",
           explanation:
-            "An algorithm's logic can be written down using two standard tools, and Form 3 " +
-            "expects you to recognise and use both.\n\n" +
+            "An algorithm's logic can be written down using two standard tools, and you " +
+            "should be able to recognise and use both.\n\n" +
             "FLOWCHARTS use standard shapes: an OVAL for Start/End, a RECTANGLE for a process " +
             "step (an action), a DIAMOND for a decision (a yes/no question), and a " +
             "PARALLELOGRAM for input/output.\n\n" +
@@ -48,7 +48,7 @@
         },
         {
           key: "interpret",
-          topicRef: "6.7 Algorithm Design and Problem Solving (Form 3): Interpreting and Testing Algorithms",
+          topicRef: "Algorithm Design and Problem Solving: Interpreting and Testing",
           title: "Interpreting and Testing Algorithms",
           explanation:
             "Interpreting an algorithm means tracing through it line by line, keeping track of " +
@@ -80,10 +80,10 @@
       topics: [
         {
           key: "design",
-          topicRef: "6.7 Algorithm Design and Problem Solving (Form 4): Algorithm Design",
+          topicRef: "Algorithm Design and Problem Solving: Algorithm Design",
           title: "Algorithm Design",
           explanation:
-            "At Form 4 you move from reading algorithms to DESIGNING your own. A well-designed " +
+            "Next you move from reading algorithms to DESIGNING your own. A well-designed " +
             "algorithm is built from three basic control structures:\n\n" +
             "SEQUENCE: steps run one after another, in order.\n" +
             "SELECTION: a decision point (IF...THEN...ELSE) chooses between paths.\n" +
@@ -109,10 +109,10 @@
       topics: [
         {
           key: "standard",
-          topicRef: "7.6 Algorithm Design and Data Structures (Form 5)",
+          topicRef: "Algorithms and Data Structures: Standard Algorithms",
           title: "Pseudocode Structures, Standard Algorithms, Data Structures",
           explanation:
-            "A-Level Form 5 applies the same control structures to real STANDARD ALGORITHMS " +
+            "The same control structures are applied in real STANDARD ALGORITHMS " +
             "you're expected to know by name:\n\n" +
             "SORTING: Bubble sort (repeatedly swaps neighbouring out-of-order items) and " +
             "Quick sort (splits the list around a pivot and sorts each half).\n" +
@@ -138,10 +138,10 @@
       topics: [
         {
           key: "arrays",
-          topicRef: "7.6 Algorithm Design and Data Structures (Form 6): Binary Trees and Array Operations",
+          topicRef: "Algorithms and Data Structures: Binary Trees and Arrays",
           title: "Binary Trees and Array Operations",
           explanation:
-            "At Form 6 you perform real operations on both static and dynamic data structures.\n\n" +
+            "Here you perform real operations on both static and dynamic data structures.\n\n" +
             "ARRAY OPERATIONS: inserting a value shifts every item from that position onwards " +
             "one place to the right to make room. Deleting a value shifts every item after it " +
             "one place to the left to close the gap. Searching checks items one at a time (or, " +
@@ -163,7 +163,7 @@
         },
         {
           key: "primitives",
-          topicRef: "7.6 Algorithm Design and Data Structures (Form 6): Primitive Data Types",
+          topicRef: "Algorithms and Data Structures: Primitive Data Types",
           title: "Primitive Data Types",
           explanation:
             "Every variable is built from one of four primitive data types:\n\n" +
@@ -189,7 +189,7 @@
         },
         {
           key: "recursion",
-          topicRef: "7.6 Algorithm Design and Data Structures (Form 6): Recursion",
+          topicRef: "Algorithms and Data Structures: Recursion",
           title: "Recursion",
           explanation:
             "RECURSION is when a function calls itself to solve a problem by breaking it into " +
@@ -236,14 +236,14 @@
   corpus.push(
     {
       q: "What is computer science?",
-      a: "Computer Science is the study of how to solve problems using algorithms and data structures, and how to turn that logic into working programs. Sauti focuses specifically on the Algorithm Design and Data Structures thread of the Zimbabwean Form 3 to 6 syllabus.",
+      a: "Computer Science is the study of how to solve problems using algorithms and data structures, and how to turn that logic into working programs. Sauti currently covers algorithm design, programming fundamentals and data structures.",
       level: "About Sauti",
       topic: "What This Tool Is",
       topicRef: "About",
     },
     {
       q: "What does this app do?",
-      a: "Sauti teaches the Algorithm Design and Data Structures thread of the Zimbabwean Computer Science syllabus, Form 3 through Form 6, completely offline and by voice. Every topic has a plain explanation, a hands-on practical widget, and practice questions with answers, all readable by any screen reader and all speakable through Sauti's own built-in Read Aloud mode.",
+      a: "Sauti teaches Computer Science, starting with algorithm design, programming fundamentals and data structures, completely offline and by voice. Every topic has a plain explanation, a hands-on practical widget, and practice questions with answers, all readable by any screen reader and all speakable through Sauti's own built-in Read Aloud mode.",
       level: "About Sauti",
       topic: "What This Tool Is",
       topicRef: "About",
